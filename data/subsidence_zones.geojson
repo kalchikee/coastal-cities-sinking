@@ -1,0 +1,185 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "katy",
+        "name": "Katy / Fort Bend County",
+        "subsidence_rate_mm_yr": 25,
+        "subsidence_range": "20–30 mm/yr",
+        "cause": "Groundwater extraction",
+        "status": "Active hotspot",
+        "period": "2016–2024",
+        "notes": "~50 km² exceeds 20 mm/yr near I-10/Hwy 99. GPS sites average −21.2 mm/yr.",
+        "color_tier": "critical"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.97, 29.71], [-95.68, 29.71], [-95.68, 29.92], [-95.97, 29.92], [-95.97, 29.71]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "jersey_village",
+        "name": "Jersey Village / NW Harris County",
+        "subsidence_rate_mm_yr": 15,
+        "subsidence_range": "10–20 mm/yr",
+        "cause": "Groundwater extraction (declining due to regulation)",
+        "status": "Moderately active",
+        "period": "2010–present",
+        "notes": "Peak rates were 40–50 mm/yr pre-2000. Rates declining since Harris-Galveston Subsidence District regulations.",
+        "color_tier": "high"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.67, 29.82], [-95.45, 29.82], [-95.45, 29.97], [-95.67, 29.97], [-95.67, 29.82]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "spring_woodlands",
+        "name": "Spring / The Woodlands",
+        "subsidence_rate_mm_yr": 15,
+        "subsidence_range": "10–20 mm/yr",
+        "cause": "Groundwater extraction (Montgomery County)",
+        "status": "Intensifying",
+        "period": "2016–2024",
+        "notes": "~50% of Montgomery County experiences >5 mm/yr. Intensifying as development expands northward.",
+        "color_tier": "high"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.60, 30.00], [-95.27, 30.00], [-95.27, 30.22], [-95.60, 30.22], [-95.60, 30.00]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "mont_belvieu",
+        "name": "Mont Belvieu / Chambers County",
+        "subsidence_rate_mm_yr": 15,
+        "subsidence_range": "10–20 mm/yr",
+        "cause": "Oil and gas extraction",
+        "status": "Active",
+        "period": "2016–2024",
+        "notes": "Driven by subsurface resource extraction, not groundwater. Distinct mechanism from other Houston zones.",
+        "color_tier": "high"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.08, 29.76], [-94.78, 29.76], [-94.78, 29.95], [-95.08, 29.95], [-95.08, 29.76]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "fresno",
+        "name": "Fresno / Missouri City",
+        "subsidence_rate_mm_yr": 10,
+        "subsidence_range": "5–15 mm/yr",
+        "cause": "Groundwater extraction",
+        "status": "Moderate",
+        "period": "2016–2024",
+        "notes": "Identified in University of Houston InSAR study as actively subsiding suburban area.",
+        "color_tier": "moderate"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.62, 29.44], [-95.35, 29.44], [-95.35, 29.66], [-95.62, 29.66], [-95.62, 29.44]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "downtown_houston",
+        "name": "Downtown Houston / Harris County Core",
+        "subsidence_rate_mm_yr": 2,
+        "subsidence_range": "+1 to +3 mm/yr (rebound)",
+        "cause": "Groundwater recovery after regulation",
+        "status": "Stable / slight rebound",
+        "period": "2010–present",
+        "notes": "Subsidence has essentially ceased. Some areas show measurable uplift due to aquifer pressure recovery since HGSD groundwater regulations took full effect.",
+        "color_tier": "stable"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.52, 29.66], [-95.23, 29.66], [-95.23, 29.86], [-95.52, 29.86], [-95.52, 29.66]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "baytown_pasadena",
+        "name": "Baytown / Pasadena / Ship Channel",
+        "subsidence_rate_mm_yr": 1,
+        "subsidence_range": "~0 mm/yr (stabilized)",
+        "cause": "Historical: heavy industrial groundwater extraction; now regulated",
+        "status": "Stabilized (historically most impacted)",
+        "period": "Post-1975 to present",
+        "notes": "Site of the most dramatic subsidence in U.S. history: >3 meters of cumulative sinking by 1979. Now stabilized due to HGSD groundwater regulations. Permanently lower ground elevation is the legacy impact.",
+        "color_tier": "stabilized"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.27, 29.67], [-94.88, 29.67], [-94.88, 29.84], [-95.27, 29.84], [-95.27, 29.67]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "galveston_island",
+        "name": "Galveston Island",
+        "subsidence_rate_mm_yr": 3.5,
+        "subsidence_range": "3–4 mm/yr",
+        "cause": "Natural geological compaction of Holocene sediments",
+        "status": "Natural background rate",
+        "period": "Current",
+        "notes": "Anthropogenic subsidence largely halted. Background geological rate persists. The Galveston Pier 21 tide gauge shows 6.51 mm/yr relative SLR — the difference is absolute sea level rise.",
+        "color_tier": "low"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.17, 29.18], [-94.71, 29.18], [-94.71, 29.36], [-95.17, 29.36], [-95.17, 29.18]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "bolivar_peninsula",
+        "name": "Bolivar Peninsula / Crystal Beach",
+        "subsidence_rate_mm_yr": 3,
+        "subsidence_range": "2–4 mm/yr",
+        "cause": "Natural geological compaction",
+        "status": "Low natural rate",
+        "period": "Current",
+        "notes": "Low-lying barrier peninsula at ~1m elevation. Highly vulnerable to storm surge and gradual SLR even at modest subsidence rates.",
+        "color_tier": "low"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-94.88, 29.38], [-94.60, 29.38], [-94.60, 29.52], [-94.88, 29.52], [-94.88, 29.38]
+        ]]
+      }
+    }
+  ]
+}

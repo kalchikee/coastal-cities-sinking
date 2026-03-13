@@ -1,0 +1,133 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_galveston_core",
+        "name": "Galveston Island — Low Core",
+        "elevation_m_above_mhhw": 0.3,
+        "description": "The lowest-lying sections of Galveston Island including historic downtown areas, east end, and near sea-wall gaps.",
+        "flood_tier": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.13, 29.20], [-94.73, 29.20], [-94.73, 29.33], [-95.13, 29.33], [-95.13, 29.20]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_bolivar_core",
+        "name": "Bolivar Peninsula — Core",
+        "elevation_m_above_mhhw": 0.5,
+        "description": "Low-lying barrier peninsula including Crystal Beach and High Island approaches.",
+        "flood_tier": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-94.86, 29.40], [-94.62, 29.40], [-94.62, 29.50], [-94.86, 29.50], [-94.86, 29.40]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_galveston_bay_west",
+        "name": "West Galveston Bay Marshes",
+        "elevation_m_above_mhhw": 0.4,
+        "description": "Coastal marshes and tidal flats on the western shore of Galveston Bay.",
+        "flood_tier": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.15, 29.33], [-94.90, 29.33], [-94.90, 29.55], [-95.15, 29.55], [-95.15, 29.33]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_texas_city",
+        "name": "Texas City / La Marque Lowlands",
+        "elevation_m_above_mhhw": 0.9,
+        "description": "Industrial coastal areas of Texas City and La Marque, including the Texas City Dike vicinity.",
+        "flood_tier": 2
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.07, 29.34], [-94.88, 29.34], [-94.88, 29.46], [-95.07, 29.46], [-95.07, 29.34]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_clear_lake",
+        "name": "Clear Lake / NASA / League City Shores",
+        "elevation_m_above_mhhw": 1.1,
+        "description": "Low-lying suburban areas along Clear Lake and upper Galveston Bay, including parts of Seabrook, Kemah, Clear Lake Shores, and Webster.",
+        "flood_tier": 2
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.18, 29.49], [-94.97, 29.49], [-94.97, 29.62], [-95.18, 29.62], [-95.18, 29.49]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_baytown_lowlands",
+        "name": "Baytown / Channelview Lowlands",
+        "elevation_m_above_mhhw": 1.2,
+        "description": "The Baytown and Channelview areas sit atop 3+ meters of cumulative historical subsidence, leaving them effectively much lower than original elevation.",
+        "flood_tier": 2
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.15, 29.69], [-94.90, 29.69], [-94.90, 29.82], [-95.15, 29.82], [-95.15, 29.69]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_south_houston",
+        "name": "South Houston / Pasadena Bayou Corridors",
+        "elevation_m_above_mhhw": 1.8,
+        "description": "Low-lying areas along Brays Bayou, Buffalo Bayou tributaries, and Clear Creek through south Houston and Pasadena.",
+        "flood_tier": 3
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.30, 29.60], [-95.08, 29.60], [-95.08, 29.72], [-95.30, 29.72], [-95.30, 29.60]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zone_league_city_inland",
+        "name": "League City / Friendswood Inland Areas",
+        "elevation_m_above_mhhw": 2.1,
+        "description": "Slightly higher suburban areas of League City and Friendswood, at risk under high SLR scenarios combined with local subsidence.",
+        "flood_tier": 3
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-95.20, 29.44], [-95.00, 29.44], [-95.00, 29.57], [-95.20, 29.57], [-95.20, 29.44]
+        ]]
+      }
+    }
+  ]
+}
