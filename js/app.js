@@ -1,12 +1,26 @@
 /* ============================================================
    Subsidence Sentinel — app.js
    Houston-Galveston Ground Sinking & Sea Level Rise
-   Data sources:
-     - NOAA CO-OPS station 8771450 (Galveston Pier 21)
-     - Harris-Galveston Subsidence District GPS benchmarks
-     - Nature Scientific Reports PMC7578811, PMC12271985
-     - NOAA 2022 Sea Level Rise Technical Report
-     - University of Houston InSAR study (2022)
+
+   REAL DATA SOURCES:
+   ─ NOAA CO-OPS API station 8771450 (Galveston Pier 21)
+     372 monthly mean sea level values 1990–2020, fetched live
+   ─ NOAA 2022 Sea Level Rise Technical Report: Galveston projections
+   ─ Nature Scientific Reports PMC7578811 & PMC12271985
+     Subsidence rates from GPS benchmarks & InSAR
+   ─ University of Houston InSAR study (2022)
+   ─ FEMA National Flood Hazard Layer (NFHL) REST API
+     250 real flood zone polygons, Harris + Galveston counties
+     Queried: hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28
+   ─ OpenStreetMap Overpass API (2026-03-13T18:42:12Z)
+     468 infrastructure features: hospitals, fire stations,
+     power plants, airports, wastewater plants, ports, refineries
+
+   APPROXIMATED (no queryable vector API exists):
+   ─ Subsidence zone boundaries: research-derived, ~5–20 km accuracy
+     (USGS/HGSD publish raster-only; no vector API)
+   ─ SLR inundation zones: SRTM-elevation-derived approximations
+     (NOAA SLR service is raster tile cache; no vector query endpoint)
    ============================================================ */
 
 'use strict';
@@ -158,12 +172,13 @@ let state = {
   playTimer: null,
   showSubsidence:  true,
   showInundation:  true,
+  showFema:        true,
   showInfra:       false,
   activeChart:     'slr'
 };
 
 /* ── Leaflet map layers ── */
-let map, subsidenceLayer, inundationLayers = {}, infraLayer, chartInstance;
+let map, subsidenceLayer, inundationLayers = {}, femaLayer, infraLayer, chartInstance;
 
 /* ══════════════════════════════════════════════════════════ */
 /*  INIT                                                     */
@@ -172,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initMap();
   loadSubsidenceLayer();
   loadInundationLayers();
+  loadFemaLayer();
   loadInfraLayer();
   initChart();
   updateProjections();
@@ -274,59 +290,107 @@ function loadInundationLayers() {
     .catch(err => console.error('Inundation layer error:', err));
 }
 
-/* ── Infrastructure (critical points) ── */
+/* ── FEMA Flood Zones (real data: FEMA NFHL REST API) ── */
+function loadFemaLayer() {
+  fetch('data/fema_flood_zones.geojson')
+    .then(r => r.json())
+    .then(data => {
+      const FEMA_COLORS = {
+        'VE': { fill:'#f85149', label:'Coastal High Hazard (VE) — 100-yr + wave action' },
+        'V':  { fill:'#f85149', label:'Coastal High Hazard (V)' },
+        'AE': { fill:'#ff7b72', label:'Special Flood Hazard (AE) — 100-yr flood' },
+        'A':  { fill:'#ffa657', label:'Special Flood Hazard (A) — 100-yr flood' },
+        'AO': { fill:'#ffd700', label:'Sheet Flow Flood (AO) — shallow' },
+      };
+
+      femaLayer = L.geoJSON(data, {
+        style: feature => {
+          const zone = feature.properties.fld_zone || 'AE';
+          const c = FEMA_COLORS[zone] || { fill:'#888' };
+          return {
+            fillColor:   c.fill,
+            fillOpacity: 0.35,
+            color:       c.fill,
+            weight:      0.8,
+            opacity:     0.7
+          };
+        },
+        onEachFeature: (feature, layer) => {
+          const p = feature.properties;
+          const zone  = p.fld_zone || '?';
+          const conf  = FEMA_COLORS[zone] || { label: zone };
+          layer.bindPopup(`
+            <div class="popup-title">FEMA Flood Zone ${zone}</div>
+            <div class="popup-row"><span class="popup-key">Classification</span>
+              <span class="popup-val">${conf.label}</span></div>
+            <div class="popup-row"><span class="popup-key">County</span>
+              <span class="popup-val">${p.county || '—'}</span></div>
+            <div class="popup-row"><span class="popup-key">SFHA</span>
+              <span class="popup-val">Special Flood Hazard Area</span></div>
+            <div style="padding-top:6px;font-size:10px;color:#8b949e;">
+              Source: FEMA NFHL MapServer Layer 28<br>
+              Based on LiDAR-derived DEMs and hydraulic modeling.
+            </div>
+          `);
+        }
+      });
+
+      if (state.showFema) femaLayer.addTo(map);
+      // Place fema beneath subsidence so zones don't dominate
+      if (subsidenceLayer) subsidenceLayer.bringToFront();
+    })
+    .catch(err => console.error('FEMA layer error:', err));
+}
+
+/* ── Infrastructure (real OSM data, 468 features) ── */
 function loadInfraLayer() {
-  // Real critical infrastructure in Houston-Galveston region
-  const infraPoints = [
-    { name:'Houston Methodist Hospital (Baytown)', type:'Hospital', lat:29.7393, lng:-94.9827, elev_m:4.0 },
-    { name:'University of Texas Medical Branch (UTMB) Galveston', type:'Hospital', lat:29.3099, lng:-94.7850, elev_m:1.2 },
-    { name:'Clear Lake Regional Medical Center', type:'Hospital', lat:29.5756, lng:-95.1135, elev_m:5.5 },
-    { name:'Houston Hobby Airport', type:'Airport', lat:29.6454, lng:-95.2789, elev_m:12.8 },
-    { name:'Port of Houston — Bayport Terminal', type:'Port', lat:29.6094, lng:-95.0219, elev_m:2.1 },
-    { name:'Port of Galveston', type:'Port', lat:29.3086, lng:-94.8128, elev_m:1.5 },
-    { name:'ExxonMobil Baytown Refinery (largest US refinery)', type:'Industrial', lat:29.7397, lng:-94.9577, elev_m:3.5 },
-    { name:'LyondellBasell Houston Refinery', type:'Industrial', lat:29.7521, lng:-95.2418, elev_m:8.0 },
-    { name:'Galveston Island State Park', type:'Environment', lat:29.2008, lng:-94.9847, elev_m:0.6 },
-    { name:'Harris County Flood Control District HQ', type:'Government', lat:29.7604, lng:-95.4072, elev_m:14.0 },
-    { name:'NASA Johnson Space Center', type:'Government', lat:29.5594, lng:-95.0891, elev_m:7.3 },
-    { name:'Galveston - Texas City Dike', type:'Infrastructure', lat:29.3684, lng:-94.8463, elev_m:1.8 },
-    { name:'Bolivar Ferry Landing', type:'Infrastructure', lat:29.3600, lng:-94.7712, elev_m:1.0 },
-    { name:'Texas A&M Galveston Campus', type:'Education', lat:29.3068, lng:-94.7928, elev_m:1.5 },
-    { name:'William P. Hobby Airport (Old)', type:'Airport', lat:29.6454, lng:-95.2789, elev_m:12.8 }
-  ];
+  fetch('data/infrastructure.geojson')
+    .then(r => r.json())
+    .then(data => {
+      const markers = [];
 
-  const icons = {
-    Hospital:      { color:'#f85149', symbol:'H' },
-    Airport:       { color:'#ffd700', symbol:'✈' },
-    Port:          { color:'#79c0ff', symbol:'⚓' },
-    Industrial:    { color:'#ffa657', symbol:'⚙' },
-    Government:    { color:'#3fb950', symbol:'G' },
-    Infrastructure:{ color:'#d2a8ff', symbol:'🔧' },
-    Environment:   { color:'#58a6ff', symbol:'🌿' },
-    Education:     { color:'#e3b341', symbol:'E' }
-  };
+      data.features.forEach(feat => {
+        const p   = feat.properties;
+        const coords = feat.geometry.coordinates;
+        const lat = coords[1], lng = coords[0];
 
-  const markers = infraPoints.map(p => {
-    const ic = icons[p.type] || { color:'#888', symbol:'?' };
-    const icon = L.divIcon({
-      className: '',
-      html: `<div style="width:22px;height:22px;background:${ic.color};border:2px solid rgba(255,255,255,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#000;box-shadow:0 2px 8px rgba(0,0,0,.6);">${ic.symbol}</div>`,
-      iconSize: [22,22],
-      iconAnchor: [11,11]
-    });
+        const icon = L.divIcon({
+          className: '',
+          html: `<div style="width:20px;height:20px;background:${p.color};border:2px solid rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#000;box-shadow:0 2px 6px rgba(0,0,0,.7);">${p.symbol}</div>`,
+          iconSize:   [20, 20],
+          iconAnchor: [10, 10]
+        });
 
-    const marker = L.marker([p.lat, p.lng], { icon });
-    const yearAtRisk = estimateFloodYear(p.elev_m * 100, p.lat, p.lng);
-    marker.bindPopup(`<div class="popup-title">${p.name}</div>
-      <div class="popup-row"><span class="popup-key">Type</span><span class="popup-val">${p.type}</span></div>
-      <div class="popup-row"><span class="popup-key">Elevation</span><span class="popup-val">${p.elev_m.toFixed(1)} m above MSL</span></div>
-      <div class="popup-row"><span class="popup-key">Est. chronic flood onset</span>
-        <span class="popup-val" style="color:${yearAtRisk < 2060 ? '#f85149':'#ffa657'};">${yearAtRisk > 2100 ? 'Post-2100' : yearAtRisk}</span></div>
-    `);
-    return marker;
-  });
+        const marker = L.marker([lat, lng], { icon });
 
-  infraLayer = L.layerGroup(markers);
+        let extraRows = '';
+        if (p.type === 'Power Plant' && p.capacity_mw) {
+          extraRows += `<div class="popup-row"><span class="popup-key">Capacity</span><span class="popup-val">${p.capacity_mw} MW</span></div>`;
+        }
+        if (p.type === 'Power Plant' && p.energy_source) {
+          extraRows += `<div class="popup-row"><span class="popup-key">Fuel</span><span class="popup-val">${p.energy_source}</span></div>`;
+        }
+        if (p.operator) {
+          extraRows += `<div class="popup-row"><span class="popup-key">Operator</span><span class="popup-val">${p.operator}</span></div>`;
+        }
+
+        marker.bindPopup(`
+          <div class="popup-title">${p.name}</div>
+          <div class="popup-row"><span class="popup-key">Type</span><span class="popup-val">${p.type}</span></div>
+          ${extraRows}
+          <div style="padding-top:6px;font-size:10px;color:#8b949e;">
+            Source: OpenStreetMap (Overpass API)<br>
+            Coordinates: ${lat.toFixed(5)}, ${lng.toFixed(5)}
+          </div>
+        `);
+
+        markers.push(marker);
+      });
+
+      infraLayer = L.layerGroup(markers);
+      console.log(`Infrastructure layer: ${markers.length} real OSM features loaded`);
+    })
+    .catch(err => console.error('Infrastructure layer error:', err));
 }
 
 /* Estimate year of chronic flooding onset for a given elevation */
@@ -662,6 +726,13 @@ function bindControls() {
   document.getElementById('toggle-inundation').addEventListener('change', e => {
     state.showInundation = e.target.checked;
     updateInundation();
+  });
+
+  document.getElementById('toggle-fema').addEventListener('change', e => {
+    state.showFema = e.target.checked;
+    if (femaLayer) {
+      state.showFema ? femaLayer.addTo(map) : map.removeLayer(femaLayer);
+    }
   });
 
   document.getElementById('toggle-infra').addEventListener('change', e => {

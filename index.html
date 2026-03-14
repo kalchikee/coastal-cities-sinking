@@ -119,30 +119,48 @@
     <!-- Layer controls -->
     <div class="sidebar-section">
       <h2>Map Layers</h2>
+
       <div class="layer-toggle">
         <label for="toggle-subsidence">
           <span class="layer-dot" style="background:#ff7b72;"></span>
           Subsidence Rate Zones
+          <span style="font-size:9px;color:#8b949e;margin-left:4px;">(research-derived)</span>
         </label>
         <label class="toggle-switch">
           <input type="checkbox" id="toggle-subsidence" checked />
           <span class="slider"></span>
         </label>
       </div>
+
+      <div class="layer-toggle">
+        <label for="toggle-fema">
+          <span class="layer-dot" style="background:#f85149;"></span>
+          FEMA Flood Zones
+          <span style="font-size:9px;color:#3fb950;margin-left:4px;">✓ real data</span>
+        </label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggle-fema" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+
       <div class="layer-toggle">
         <label for="toggle-inundation">
           <span class="layer-dot" style="background:#1f6feb;"></span>
-          Inundation Zones (SLR + Subsidence)
+          SLR Projection Zones
+          <span style="font-size:9px;color:#8b949e;margin-left:4px;">(SRTM-derived)</span>
         </label>
         <label class="toggle-switch">
           <input type="checkbox" id="toggle-inundation" checked />
           <span class="slider"></span>
         </label>
       </div>
+
       <div class="layer-toggle">
         <label for="toggle-infra">
-          <span class="layer-dot" style="background:#3fb950;"></span>
+          <span class="layer-dot" style="background:#ffa657;"></span>
           Critical Infrastructure
+          <span style="font-size:9px;color:#3fb950;margin-left:4px;">✓ real data (OSM)</span>
         </label>
         <label class="toggle-switch">
           <input type="checkbox" id="toggle-infra" />
@@ -159,13 +177,13 @@
       </div>
     </div>
 
-    <!-- Subsidence legend -->
+    <!-- Legend -->
     <div class="sidebar-section">
-      <h2>Subsidence Rate Legend</h2>
+      <h2>Subsidence Rate (research-derived)</h2>
       <div class="legend-items">
         <div class="legend-item">
           <div class="legend-swatch" style="background:#f85149;"></div>
-          <span>Critical: &gt;20 mm/yr (Katy hotspot)</span>
+          <span>Critical: &gt;20 mm/yr — Katy hotspot</span>
         </div>
         <div class="legend-item">
           <div class="legend-swatch" style="background:#ff7b72;"></div>
@@ -188,9 +206,26 @@
           <span>Stabilized (historical: up to 3 m cumulative)</span>
         </div>
       </div>
-      <div class="inundation-legend" style="margin-top:10px;">
-        <h2 style="width:100%;margin-bottom:4px;">Inundation Risk</h2>
-        <div class="il-item"><div class="il-swatch" style="background:#1f6feb;"></div><span>Tier 1 (&lt;50 cm)</span></div>
+
+      <h2 style="margin-top:12px;">FEMA Flood Zones <span style="color:#3fb950;font-size:9px;">✓ real data</span></h2>
+      <div class="legend-items">
+        <div class="legend-item">
+          <div class="legend-swatch" style="background:#f85149;opacity:.7;"></div>
+          <span>VE — Coastal High Hazard (100-yr + waves)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="background:#ff7b72;opacity:.7;"></div>
+          <span>AE — Special Flood Hazard (100-yr flood)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-swatch" style="background:#ffa657;opacity:.7;"></div>
+          <span>A — Special Flood Hazard (no BFE)</span>
+        </div>
+      </div>
+
+      <h2 style="margin-top:12px;">SLR Projection <span style="color:#8b949e;font-size:9px;">(SRTM-derived)</span></h2>
+      <div class="inundation-legend">
+        <div class="il-item"><div class="il-swatch" style="background:#1f6feb;"></div><span>Tier 1 (&lt;50 cm rise)</span></div>
         <div class="il-item"><div class="il-swatch" style="background:#388bfd;"></div><span>Tier 2 (50–120 cm)</span></div>
         <div class="il-item"><div class="il-swatch" style="background:#58a6ff;"></div><span>Tier 3 (120–200 cm)</span></div>
       </div>
@@ -200,13 +235,14 @@
     <div class="sidebar-section">
       <h2>Data Sources</h2>
       <ul class="sources-list">
-        <li><a href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8771450" target="_blank" rel="noopener">NOAA CO-OPS Station 8771450 — Galveston Pier 21 (1908–2024)</a></li>
-        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7578811/" target="_blank" rel="noopener">Nature Sci. Reports — Subsidence contributions to SLR at Galveston (2020)</a></li>
+        <li><a href="https://tidesandcurrents.noaa.gov/stationhome.html?id=8771450" target="_blank" rel="noopener">NOAA CO-OPS Stn 8771450 — Galveston Pier 21 monthly MSL 1990–2020 (API)</a></li>
+        <li><a href="https://hazards.fema.gov/gis/nfhl/rest/services/public/NFHL/MapServer/28" target="_blank" rel="noopener">FEMA NFHL MapServer Layer 28 — 250 flood zone polygons, Harris &amp; Galveston counties (API)</a></li>
+        <li><a href="https://www.openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap Overpass API — 468 infrastructure features (hospitals, power plants, airports…)</a></li>
+        <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7578811/" target="_blank" rel="noopener">Nature Sci. Reports PMC7578811 — Subsidence contributions to SLR at Galveston (2020)</a></li>
         <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12271985/" target="_blank" rel="noopener">PMC12271985 — Century of Houston Subsidence Studies (2024)</a></li>
         <li><a href="https://www.uh.edu/news-events/stories/2022-news-articles/october-2022/10112022-houston-subsidence.php" target="_blank" rel="noopener">Univ. of Houston InSAR Subsidence Study (2022)</a></li>
-        <li><a href="https://oceanservice.noaa.gov/hazards/sealevelrise/sealevelrise-tech-report.html" target="_blank" rel="noopener">NOAA 2022 Sea Level Rise Technical Report</a></li>
-        <li><a href="https://www.hgsubsidence.org" target="_blank" rel="noopener">Harris-Galveston Subsidence District</a></li>
-        <li><a href="https://piahs.copernicus.org/articles/382/11/2020/" target="_blank" rel="noopener">GPS Geodetic Infrastructure for Subsidence Monitoring (PIAHS 2020)</a></li>
+        <li><a href="https://oceanservice.noaa.gov/hazards/sealevelrise/sealevelrise-tech-report.html" target="_blank" rel="noopener">NOAA 2022 Sea Level Rise Technical Report — Galveston projections</a></li>
+        <li><a href="https://www.hgsubsidence.org" target="_blank" rel="noopener">Harris-Galveston Subsidence District — GPS benchmark rates</a></li>
       </ul>
     </div>
 
